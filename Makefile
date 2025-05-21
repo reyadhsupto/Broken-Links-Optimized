@@ -3,7 +3,7 @@ IMAGE_NAME=broken-link-checker
 PYTHON=python3
 VENV=venv
 SCRIPT=brokenLinks.py
-URL ?= https://example.com
+URL ?= https://www.amazon.com/
 
 # Full reset & run: clean, pull, venv, Docker build/run, local exec
 .PHONY: all

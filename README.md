@@ -14,6 +14,7 @@ A fast, concurrent, headless browser-based tool to extract and validate all HTTP
 - Tracks total execution time
 - Dockerised for portability
 - Makefile for clean automation
+- Stores links with statuses into csv file
 
 ---
 
@@ -140,7 +141,6 @@ This avoids duplicate HTTP requests, reduces runtime, and improves performance â
 ## ðŸ“‹ To-Do
 
 - [ ] Enable multi-page crawling through sitemap parsing
-- [ ] Export broken link results to CSV/JSON
 - [ ] Implement retry logic for intermittent connection failures
 - [ ] Add unit tests for link-checking logic
 

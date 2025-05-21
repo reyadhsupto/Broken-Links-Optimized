@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import os
 import sys
+import pandas as pd
 
 
 def get_links(page):
@@ -20,35 +21,38 @@ def check_link(link):
         response = requests.get(link, timeout=15, allow_redirects=True)
         if response.status_code >= 400:
             return (link, response.status_code)
+        return (link, 200)
     except requests.RequestException as e:
         return (link, str(e))
-    return None
 
 
-def check_broken_links_concurrently(links, max_workers=os.cpu_count()):
-    broken = []
+def check_links_concurrently(links, max_workers=os.cpu_count()):
+    results = []
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(check_link, link) for link in links]
         for future in as_completed(futures):
-            result = future.result()
-            if result:
-                broken.append(result)
-    return broken
+            results.append(future.result())
+    return results
 
 
 def main():
+    url = sys.argv[1] if len(sys.argv) > 1 else "https://www.amazon.com/"
+    all_results = []
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        url = sys.argv[1] if len(sys.argv) > 1 else f"https://www.amazon.com/"
         page.goto(str(url))
 
         print("Extracting unique HTTP links...")
-        valid_links = get_links(page)
-        print(f"Found {len(valid_links)} unique links.")
+        links = get_links(page)
+        print(f"Found {len(links)} unique links.")
 
-        print("Checking for broken links...")
-        broken_links = check_broken_links_concurrently(valid_links)
+        print("Checking links...")
+        results = check_links_concurrently(links)
+
+        broken_links = [r for r in results if r[1] != 200]
+        valid_links = [r for r in results if r[1] == 200]
 
         if broken_links:
             print("\nBroken Links Found:")
@@ -57,12 +61,24 @@ def main():
         else:
             print("\nAll links are valid")
 
-        page.close()
+        for link, status in results:
+            all_results.append({
+                "Base URL": url,
+                "URL": link,
+                "Status Code": status,
+                "Status": "Valid" if status == 200 else "Broken"
+            })
 
+        df = pd.DataFrame(all_results)
+        df.to_csv("link_results.csv", index=False)
+        print("\n Results saved to link_results.csv")
+
+        page.close()
         browser.close()
 
+
 if __name__ == "__main__":
-    stTime = time.time()
+    start_time = time.time()
     main()
-    endTime = time.time()
-    print(f"Total execution time: {(endTime-stTime):.2f} seconds")
+    end_time = time.time()
+    print(f"Total execution time: {end_time - start_time:.2f} seconds")
