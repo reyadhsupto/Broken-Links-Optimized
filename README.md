@@ -6,13 +6,14 @@ A fast, concurrent, headless browser-based tool to extract and validate all HTTP
 
 ## 🚀 Features
 
-- Launches Chromium headlessly via Playwright
+- Headless browser-based link extraction (via Playwright)
 - Extracts all visible `http`/`https` links from the page
 - Uses a `set()` to automatically remove duplicate links
 - Checks links in parallel using `ThreadPoolExecutor`
 - Identifies broken URLs with HTTP errors or connection issues
 - Tracks total execution time
-- Dockerised for local execution with easy to use command using Makefile
+- Dockerised for portability
+- Makefile for clean automation
 
 ---
 
@@ -20,7 +21,7 @@ A fast, concurrent, headless browser-based tool to extract and validate all HTTP
 
 - Python 3.7+
 - [Playwright for Python](https://playwright.dev/python/)
-- `requests`
+- Docker (for containerised use)
 
 Install dependencies:
 
@@ -56,6 +57,13 @@ make all
 ```bash
 make local
 ```
+
+### 🔹 To Explicitly specify URL
+
+```bash
+make all URL=<your url>
+```
+
 ### 🔹 Option 2: Manually
 
 ### 1. Clone the repository
@@ -131,7 +139,6 @@ This avoids duplicate HTTP requests, reduces runtime, and improves performance �
 
 ## 📋 To-Do
 
-- [ ] Add CLI support via `argparse`
 - [ ] Enable multi-page crawling through sitemap parsing
 - [ ] Export broken link results to CSV/JSON
 - [ ] Implement retry logic for intermittent connection failures
