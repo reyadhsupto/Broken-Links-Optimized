@@ -45,7 +45,7 @@ build:
 .PHONY: run
 run:
 	@echo "Running docker image"
-	docker run --rm $(IMAGE_NAME) $(URL)
+	docker run --rm $(IMAGE_NAME) python $(SCRIPT) $(URL)
 
 # Run script locally using venv
 .PHONY: local
