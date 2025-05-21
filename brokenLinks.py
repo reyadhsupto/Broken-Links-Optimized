@@ -3,6 +3,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import os
+import sys
 
 
 def get_links(page):
@@ -39,7 +40,8 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(f"https://www.amazon.com/")
+        url = sys.argv[1] if len(sys.argv) > 1 else f"https://www.amazon.com/"
+        page.goto(str(url))
 
         print("Extracting unique HTTP links...")
         valid_links = get_links(page)
@@ -48,9 +50,12 @@ def main():
         print("Checking for broken links...")
         broken_links = check_broken_links_concurrently(valid_links)
 
-        print("\nBroken Links Found:")
-        for link, status in broken_links:
-            print(f"{link} -> Status: {status}")
+        if broken_links:
+            print("\nBroken Links Found:")
+            for link, status in broken_links:
+                print(f"{link} -> Status: {status}")
+        else:
+            print("\nAll links are valid")
 
         page.close()
 
