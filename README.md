@@ -12,6 +12,7 @@ A fast, concurrent, headless browser-based tool to extract and validate all HTTP
 - Checks links in parallel using `ThreadPoolExecutor`
 - Identifies broken URLs with HTTP errors or connection issues
 - Tracks total execution time
+- Dockerised for local execution with easy to use command using Makefile
 
 ---
 
@@ -30,6 +31,32 @@ playwright install
 ---
 
 ## 🧪 How to Use
+
+You can run the broken link checker either **locally** using a Python virtual environment or **inside a Docker container**.
+
+---
+
+### 🔹 Option 1: Local (using `venv`)
+
+Set up and run locally:
+
+```bash
+make all
+```
+
+### This will:
+- Pull the latest code from your current Git branch
+- Create or reuse a Python virtual environment (venv)
+- Install all dependencies from requirements.txt
+- Install Playwright and its browser binaries
+- Run the script locally
+
+### To run the script again without rebuilding everything:
+
+```bash
+make local
+```
+### 🔹 Option 2: Manually
 
 ### 1. Clone the repository
 
@@ -87,12 +114,12 @@ Execution time: 4.23 seconds
 ## 📁 Project Structure
 ```
 .
-├── broken_links.py          # Main script
+├── brokenLinks.py
 ├── requirements.txt
-├── README.md
-└── .gitignore
+├── Dockerfile
+├── Makefile
+└── venv/ (auto-created by Makefile)
 ```
-
 ---
 
 ## 💡 Design Note
@@ -109,7 +136,6 @@ This avoids duplicate HTTP requests, reduces runtime, and improves performance �
 - [ ] Export broken link results to CSV/JSON
 - [ ] Implement retry logic for intermittent connection failures
 - [ ] Add unit tests for link-checking logic
-- [ ] Dockerise the project for easier deployment
 
 ---
 
