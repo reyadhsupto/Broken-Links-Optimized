@@ -7,7 +7,7 @@ URL ?= https://www.amazon.com
 
 # Full reset & run: clean, pull, venv, Docker build/run, local exec
 .PHONY: all
-all: clean pull venv build run local
+all: clean pull venv build run
 
 # Pull latest code from current Git branch
 .PHONY: pull

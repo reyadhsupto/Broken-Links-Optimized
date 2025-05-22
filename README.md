@@ -38,7 +38,7 @@ You can run the broken link checker either **locally** using a Python virtual en
 
 ---
 
-### 🔹 Option 1: Local (using `venv`)
+### 🔹 Option 1: Using Make Commands
 
 Set up and run locally:
 
@@ -59,11 +59,17 @@ make all
 make local
 ```
 
-### 🔹 To Explicitly specify URL
+###  To Explicitly specify URL
 
 ```bash
 make all URL=<your url>
+or
+make local URL=<your url>
 ```
+Example: 
+```bash
+make local URL=https://www.example.com
+ ```
 
 ### 🔹 Option 2: Manually
 
@@ -129,12 +135,6 @@ Execution time: 4.23 seconds
 ├── Makefile
 └── venv/ (auto-created by Makefile)
 ```
----
-
-## 💡 Design Note
-
-The tool uses a `set()` during link extraction to ensure all links are **unique** before being validated.  
-This avoids duplicate HTTP requests, reduces runtime, and improves performance — especially on pages with repeated navigation elements or footers.
 
 ---
 
