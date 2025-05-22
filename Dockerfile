@@ -4,8 +4,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
-# Install system dependencies
+
 RUN apt-get update && apt-get install -y \
     wget gnupg curl unzip fonts-liberation libnss3 libatk1.0-0 \
     libatk-bridge2.0-0 libcups2 libdrm2 libxcomposite1 libxrandr2 \
@@ -17,5 +18,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 RUN playwright install --with-deps
 
 COPY . .
+RUN chown -R appuser:appgroup /app
+
+USER appuser
 
 CMD ["python", "brokenLinks.py"]
