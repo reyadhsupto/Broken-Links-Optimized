@@ -1,0 +1,41 @@
+name: Run Broken Link Checker
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install
+
+      - name: Run Broken Link Checker
+        run: |
+          source venv/bin/activate
+          python brokenLinks.py https://www.amazon.com
+
+      - name: Upload CSV result
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-results
+          path: link_results.csv
